@@ -15,6 +15,7 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    
 </head>
 <body>
     <div id="app">
@@ -78,4 +79,8 @@
         </main>
     </div>
 </body>
+<script type="module">
+    $('body');
+    @yield('javascript')
+    </script>
 </html>
