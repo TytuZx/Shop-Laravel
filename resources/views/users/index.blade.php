@@ -35,18 +35,27 @@
 @endsection
 @section('javascript')
 $(function() {
-      $('.delete').click(function(){
-        $.ajax({
-          method:"DELETE",
-          url: "http://shop.test/users/" + $(this).data("id"),
-        })
-        .done(function(response){
+    $('.delete').click(function(){
+      Swal.fire({
+        title: 'Czy na pewno chcesz usunąć rekord?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Tak',
+        cancelButtonText: 'Nie'
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
+            method:"DELETE",
+            url: "{{url('users')}}/" + $(this).data("id"),
+          })
+        .done(function(data){
           window.location.reload();
-
         })
-        .fail(function(response){
-          alert("error");
-        })
-      });
+        .fail(function(data){
+          Swal.fire('Oops...',data.responseJSON.message, data.responseJSON.status)
+        }) 
+        }
+      })
     });
+});
 @endsection
