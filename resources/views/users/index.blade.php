@@ -48,12 +48,12 @@ $(function() {
             method:"DELETE",
             url: "{{url('users')}}/" + $(this).data("id"),
           })
-        .done(function(data){
+          .done(function(data){
           window.location.reload();
-        })
-        .fail(function(data){
+          })
+          .fail(function(data){
           Swal.fire('Oops...',data.responseJSON.message, data.responseJSON.status)
-        }) 
+          }) 
         }
       })
     });
