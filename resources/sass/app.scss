@@ -9,3 +9,10 @@
 
 // Sweetalert2
 // @import '~sweetalert2/src/sweetalert2';
+
+// importing core styling file
+@import 'fontawesome.scss';
+
+// our project needs Solid + Brands
+@import 'solid.scss';
+@import 'brands.scss';

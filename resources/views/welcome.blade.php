@@ -21,7 +21,7 @@
               <button type="button" class="btn btn-lg btn-light"> <span class="fa fa-arrow-left"></span> </button>
               <button type="button" class="btn btn-lg btn-light"> <span class="fa fa-arrow-right"></span> </button>
             </div>
-            <div class="dropdown float-right">
+            <div class="dropdown float-end">
               <a class="btn btn-lg btn-light dropdown-toggle products-actual-count" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">5<span class="caret"></span></a>
               <div class="dropdown-menu dropdown-menu-right products-count" aria-labelledby="navbarDropdown" x-placement="bottom-end" style="will-change: transform; position: absolute; transform: translate3d(120px, 48px, 0px); top: 0px; left: 0px;">
                 <a class="dropdown-item" href="#">5</a>
@@ -63,7 +63,7 @@
               <button type="button" class="btn btn-lg btn-light"> <span class="fa fa-arrow-left"></span> </button>
               <button type="button" class="btn btn-lg btn-light"> <span class="fa fa-arrow-right"></span> </button>
             </div>
-            <div class="dropdown float-md-right">
+            <div class="dropdown float-md-end">
               <a class="btn btn-light btn-lg dropdown-toggle products-actual-count" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">5<span class="caret"></span></a>
               <div class="dropdown-menu products-count" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">5</a>
@@ -95,7 +95,7 @@
       </div>
       <input id="ex2" type="text" class="slider " value="50,150" data-slider-min="10" data-slider-max="200" data-slider-step="5" data-slider-value="[50,150]" data-value="50,150" style="display: none;">
       <div class="divider mt-5 mb-5 border-bottom border-secondary"></div>
-      <a href="#" class="btn btn-lg btn-block btn-primary mt-5" id="filter-button"><i class="fas fa-search"></i>{{__('shop.welcome.filter')}}</a>
+      <a href="#" class="btn btn-lg btn-block btn-primary mt-5" id="filter-button"><i class="fas fa-search"></i> {{__('shop.welcome.filter')}}</a>
     </form>
   </div>
 
@@ -107,15 +107,15 @@ const storagePath='{{asset('storage')}}/';
 const defaultImage='{{$defaultImage}}';
 $(function(){
 $('div.products-count a').click(function(event) {
-event.preventDefault();
-$('a.products-actual-count').text($(this).text());
-getProducts($(this).text());
+  event.preventDefault();
+  $('a.products-actual-count').text($(this).text());
+  getProducts($(this).text());
 });
 
 
 $('a#filter-button').click(function(event) {
-event.preventDefault();
-getProducts($('a.products-actual-count').text());
+  event.preventDefault();
+  getProducts($('a.products-actual-count').first().text());
 });
 
 function getProducts(paginate) {
@@ -123,7 +123,7 @@ const form = $('form.sidebar-filter').serialize();
 $.ajax({
 method:"GET",
 url: "/",
-data: form + "&" + $.param({paginate:paginate})
+data: form + "&" + $.param({paginate: paginate})
 })
 .done(function(response){
 $('div#products-wrapper').empty();

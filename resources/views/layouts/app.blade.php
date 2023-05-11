@@ -13,8 +13,10 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    
 
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 </head>
@@ -81,10 +83,8 @@
         </main>
     </div>
 </body>
-<script type="module">
+<script defer type="module">
     $('body');
     @yield('javascript')
-    @yield('js-files')
 </script>
-
 </html>
