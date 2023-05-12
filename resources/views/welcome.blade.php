@@ -51,6 +51,9 @@
                   <i>PLN {{$product->price}}</i>
                 </h5>
               </div>
+              <button class="btn btn-success btn-sm add-cart-button" data-id="{{$product->id}}" @guest disabled @endguest> 
+                <i class="far fa-cart-plus"></i> Dodaj do koszyka
+              </button>
             </div>
           </div>
           @endforeach
@@ -103,8 +106,11 @@
 </div>
 @endsection
 @section('javascript')
-const storagePath='{{asset('storage')}}/';
-const defaultImage='{{$defaultImage}}';
+const WELCOME_DATA = {
+  storagePath:'{{asset('storage')}}/',
+  defaultImage:'{{$defaultImage}}',
+  addToCart:'{{url('cart')}}/'
+}
 $(function(){
 $('div.products-count a').click(function(event) {
   event.preventDefault();
@@ -116,6 +122,31 @@ $('div.products-count a').click(function(event) {
 $('a#filter-button').click(function(event) {
   event.preventDefault();
   getProducts($('a.products-actual-count').first().text());
+});
+
+$('button.add-cart-button').click(function(event) {
+  event.preventDefault();
+  $.ajax({
+    method:"POST",
+    url: WELCOME_DATA.addToCart + $(this).data('id')
+  })
+  .done(function(){
+    Swal.fire({
+      title: 'Brawo!',
+      text: 'Produkt dodany do koszyka',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: '<i class="far fa-cart-plus"></i> Przejdź do koszyka',
+      cancelButtonText: '<i class="far fa-shopping-bag"></i> Kontynuuj zakupy'
+    }).then((result) => {
+      if (result.isConfirmed){
+        alert('OK');
+      }
+    })
+  })
+  .fail(function(){
+    Swal.fire('Oops...', 'Wystąpił błąd', 'error');
+  })
 });
 
 function getProducts(paginate) {
@@ -132,17 +163,18 @@ const html = '<div class="col-6 col-md-6 col-lg-4 mb-3">' +
   '<div class="card h-100 border-0">' +
     '<div class="card-img-top">' +
       '<img src="'+getImage(product)+'" class="img-fluid mx-auto d-block" alt="Zdjęcie produktu">' +
-      '</div>' +
+    '</div>' +
     '<div class="card-body text-center">' +
       '<h4 class="card-title">' +
         product.name +
-        '</h4>' +
+      '</h4>' +
       '<h5 class="card-price small">' +
         '<i>PLN ' + product.price + '</i>' +
-        '</h5>' +
-      '</div>' +
+      '</h5>' +
     '</div>' +
-  '</div>';
+    '<button class="btn btn-success btn-sm add-cart-button" data-id="{{$product->id}}"><i class="far fa-cart-plus"></i> Dodaj do koszyka</button>'+
+  '</div>' +
+'</div>';
 $('div#products-wrapper').append(html);
 });
 })
@@ -150,9 +182,9 @@ $('div#products-wrapper').append(html);
 
 function getImage(product){
 if(!!product.image_path){
-return storagePath+product.image_path;
+return WELCOME_DATA.storagePath + product.image_path;
 }
-return defaultImage
+return WELCOME_DATA.defaultImage;
 }
 
 });

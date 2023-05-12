@@ -55,6 +55,16 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3 justify-content-center">
+                            <div class="col-md-6">
+                                @if(!is_null($product->image_path))
+                                <a href="{{route('products.downloadImage', $product->id)}}">
+                                <img src="{{asset('storage/'.$product->image_path)}}" alt="{{ __('shop.product.fields.image') }}">
+                                </a>
+                                @endif
+                            </div>
+                        </div>
+
                     </form>
                 </div>
             </div>
