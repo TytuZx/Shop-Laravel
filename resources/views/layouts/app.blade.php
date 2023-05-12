@@ -17,7 +17,7 @@
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/app.css'])
 
 </head>
 
@@ -64,6 +64,7 @@
                                 <a class="dropdown-item" href="users/list">Użytkownicy</a>
                                 <a class="dropdown-item" href="{{route('products.index')}}">Produkty</a>
                                 @endcan
+                                <a class="dropdown-item" href="{{route('cart.index')}}">Koszyk</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
@@ -85,7 +86,7 @@
         </main>
     </div>
 </body>
-<script defer type="module">
+<script type="module">
     $('body');
     @yield('javascript')
 </script>
