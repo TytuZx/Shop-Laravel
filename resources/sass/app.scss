@@ -1,18 +1,15 @@
 // Fonts
 @import url('https://fonts.bunny.net/css?family=Nunito');
 
-// Variables
-@import 'variables';
-
 // Bootstrap
-@import 'bootstrap/scss/bootstrap';
+@import "/node_modules/bootstrap/scss/bootstrap.scss";
 
 // Sweetalert2
 // @import '~sweetalert2/src/sweetalert2';
 
-// importing core styling file
+// Fontawesome
 @import 'fontawesome.scss';
 
-// our project needs Solid + Brands
 @import 'solid.scss';
 @import 'brands.scss';
+@import 'regular.scss';

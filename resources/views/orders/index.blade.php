@@ -15,6 +15,7 @@
           <th scope="col">ID_Zamówienia</th>
           <th scope="col">Ilość</th>
           <th scope="col">Cena  [PLN]</th>
+          <th scope="col">Status zamówienia</th>
           <th scope="col">Produkty</th>
         </tr>
       </thead>
@@ -24,6 +25,7 @@
           <td>{{$order->id}}</td>
           <td>{{$order->quantity}}</td>
           <td>{{$order->price}}</td>
+          <td>{{$order->payment->status}}</td>
           <td>
           @foreach($order->products as $product)
             <ul>

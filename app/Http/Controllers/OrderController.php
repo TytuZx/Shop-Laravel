@@ -2,16 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentStatus;
 use App\Models\Order;
+use App\Models\Payment;
 use App\ValueObjects\Cart;
+use Devpark\Transfers24\Exceptions\RequestException;
+use Devpark\Transfers24\Exceptions\RequestExecutionException;
+use Devpark\Transfers24\Requests\Transfers24;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class OrderController extends Controller
 {
+    private Transfers24 $transfers24;
+
+    public function __construct(Transfers24 $transfers24)
+    {
+        $this->transfers24 = $transfers24;
+    }
+
+
     /**
      * Display a listing of the resource.
      * 
@@ -23,7 +37,6 @@ class OrderController extends Controller
         return view("orders.index", [
             'orders' => Order::where('user_id', Auth::id())->paginate(10)
         ]);
-        
     }
 
     /**
@@ -37,18 +50,45 @@ class OrderController extends Controller
             $order = new Order();
             $order->quantity = $cart->getQuantity();
             $order->price = $cart->getSum();
-            $order->user_id=Auth::id();
+            $order->user_id = Auth::id();
             $order->save();
 
-            $productsIds = $cart->getItems()->map(function($item){
-                return ['product_id'=> $item -> getProductId()];
+            $productsIds = $cart->getItems()->map(function ($item) {
+                return ['product_id' => $item->getProductId()];
             });
             $order->products()->attach($productsIds);
 
-            Session::put('cart', new Cart());
+            return $this->paymentTransaction($order);
 
-            return redirect(route('orders.index'))->with('status', 'Zamówienie zrealizowane!');
         }
         return back();
+    }
+
+    private function paymentTransaction(Order $order)
+    {
+        $payment= new Payment();
+        $payment->order_id = $order->id;
+        $this->transfers24->setEmail(Auth::user()->email)->setAmount($order->price);
+        try{
+            $response = $this->transfers24->init();
+            if ($response->isSuccess()) {
+                $payment->status=PaymentStatus::IN_PROGRESS;
+                $payment->session_id=$response->getSessionId();
+                $payment->save();
+                Session::put('cart', new Cart());
+                return redirect($this->transfers24->execute($response->getToken()));
+            } else {
+                $payment->status=PaymentStatus::FAIL;
+                $payment->erro_code=$response->getErrorCode();
+                $payment->erro_description=json_encode($response->getErrorDescription());
+                $payment->save();
+                return back()->with('warning', 'Oops... Coś poszło nie tak!');
+            }
+        } catch (RequestException|RequestExecutionException $error){
+            Log::error("Błąd transakcji",['error'=> $error]);
+            return back()->with('warning', 'Oops... Coś poszło nie tak!');
+        }
+
+        
     }
 }
