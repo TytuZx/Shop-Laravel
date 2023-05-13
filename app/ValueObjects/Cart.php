@@ -26,6 +26,21 @@ class Cart
         return $this->items;
     }
 
+    /**
+     * @return bool
+     */ 
+    public function hasItems(): bool
+    {
+        return $this->items->isNotEmpty();
+    }
+
+    public function getQuantity(): int
+    {
+        return $this->items->sum(function($item){
+            return $item->getQuantity();
+        });
+    }
+
     public function getSum(): float
     {
         return $this->items->sum(function($item){

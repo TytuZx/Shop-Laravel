@@ -9,7 +9,6 @@ use Exception;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +25,7 @@ class ProductController extends Controller
     public function index(): View
     {
         return view("products.index", [
-            'products' => Product::paginate(5)
+            'products' => Product::paginate(10)
         ]);
         
     }
